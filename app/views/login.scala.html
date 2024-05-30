@@ -1,0 +1,141 @@
+@(message: Option[String])
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login</title>
+        <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f5f5f5;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                }
+
+                #login-container {
+                    background: #fff;
+                    padding: 20px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    width: 100%;
+                    max-width: 400px;
+                    box-sizing: border-box;
+                }
+
+                h1 {
+                    color: #333;
+                    text-align: center;
+                }
+
+                form {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+                }
+
+                label {
+                    margin-bottom: 5px;
+                    font-weight: bold;
+                }
+
+                input {
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+
+                button {
+                    padding: 10px;
+                    background-color: #007bff;
+                    color: #fff;
+                    border: none;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    cursor: pointer;
+                }
+
+                button:hover {
+                    background-color: #0056b3;
+                }
+
+                p {
+                    text-align: center;
+                }
+
+                .error-message {
+                    color: red;
+                    text-align: center;
+                }
+
+                .signup-link {
+                    margin-top: 15px;
+                    text-align: center;
+                }
+
+                .signup-link a {
+                    color: #007bff;
+                    text-decoration: none;
+                }
+
+                .signup-link a:hover {
+                    text-decoration: underline;
+                }
+        </style>
+    </head>
+    <body>
+        <div id="login-container">
+            <h1>Login</h1>
+
+            @message.map { msg =>
+                <p class="error-message">@msg</p>
+            }
+
+            <form action="@routes.AuthController.login" method="post">
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required />
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required />
+                </div>
+                <div>
+                    <button type="submit">Login</button>
+                </div>
+            </form>
+
+            <p class="signup-link">Don't have an account? <a href="@routes.AuthController.showSignUp">Sign up here</a>.</p>
+        </div>
+        <script>
+                document.getElementById('login-form').addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent the form from submitting normally
+
+                    var form = event.target;
+                    var formData = new FormData(form);
+
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    })
+                            .then(response => {
+                                if (response.ok) {
+                                    // If login successful, redirect to chat page
+                                    window.location.href = 'http://localhost:9199/chat';
+                                } else {
+                                    // If login failed, show a popup with error message
+                                    document.getElementById('error-message').style.display = 'block'; // Show the error message
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                });
+        </script>
+    </body>
+</html>
