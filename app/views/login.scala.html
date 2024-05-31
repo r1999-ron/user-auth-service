@@ -1,4 +1,4 @@
-@(message: Option[String])
+@(message: Option[String], chatUrl: Option[String])
 
 <!DOCTYPE html>
 <html>
@@ -126,7 +126,7 @@
                             .then(response => {
                                 if (response.ok) {
                                     // If login successful, redirect to chat page
-                                    window.location.href = 'http://localhost:9199/chat';
+                                    window.location.href = '@chatUrl.getOrElse("#")';
                                 } else {
                                     // If login failed, show a popup with error message
                                     document.getElementById('error-message').style.display = 'block'; // Show the error message

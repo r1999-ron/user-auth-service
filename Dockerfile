@@ -24,6 +24,7 @@ EXPOSE 9000
 
 # Define environment variable
 ENV PLAY_HTTP_SECRET=thisisanapplicationsecretdonebyusingscala
+ENV CHAT_URL=http://localhost:9199/chat
 
 # Run the binary script when the container launches
 CMD ./bin/user-authentication-services -Dplay.http.secret.key=$PLAY_HTTP_SECRET

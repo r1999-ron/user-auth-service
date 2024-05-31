@@ -5,9 +5,12 @@ import play.api.mvc._
 import services.UserService
 import scala.concurrent.{ExecutionContext, Future}
 import play.api.libs.json.Json
+import play.api.Configuration
 
 @Singleton
-class AuthController @Inject()(cc: ControllerComponents, userService: UserService)(implicit ec: ExecutionContext) extends AbstractController(cc) {
+class AuthController @Inject()(cc: ControllerComponents, userService: UserService, config: Configuration)(implicit ec: ExecutionContext) extends AbstractController(cc) {
+
+  private val chatUrl = config.get[String]("chat.url")
 
   def showSignUp = Action {
     Ok(views.html.signup(None))
@@ -22,7 +25,7 @@ class AuthController @Inject()(cc: ControllerComponents, userService: UserServic
   }
 
   def showLogin = Action {
-    Ok(views.html.login(None))
+    Ok(views.html.login(None, Some(chatUrl)))
   }
 
   /*def login = Action.async(parse.formUrlEncoded) { implicit request =>
@@ -51,7 +54,7 @@ class AuthController @Inject()(cc: ControllerComponents, userService: UserServic
     val password = request.body.get("password").flatMap(_.headOption).getOrElse("")
     userService.authenticate(username, password).map {
       case Some(_) =>
-        Redirect(s"http://localhost:9199/chat?username=$username")
+        Redirect(s"$chatUrl?username=$username")
       case None =>
         BadRequest("Invalid credentials")
     }
